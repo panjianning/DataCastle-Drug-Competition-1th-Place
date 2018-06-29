@@ -75,4 +75,4 @@ ridge_all: 以one hot的molecule_id和tfidf和df_molecule.csv中分子的物化�
 ##### 2.6 df_molecule.csv给出的分子的物化属性特征
 
 #### 其它
-这个视频 https://www.youtube.com/watch?v=LgLcfZjNF44 由些帮助
+这个视频 https://www.youtube.com/watch?v=LgLcfZjNF44 有些帮助
