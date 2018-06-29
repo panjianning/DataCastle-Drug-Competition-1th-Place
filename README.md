@@ -73,3 +73,6 @@ ridge_w2v特征：以w2v为特征，训练ridge
 ridge_all: 以one hot的molecule_id和tfidf和df_molecule.csv中分子的物化属性（缺失值用均值填充）作为特征，训练ridge
 
 ##### 2.6 df_molecule.csv给出的分子的物化属性特征
+
+#### 其它
+这个视频 https://www.youtube.com/watch?v=LgLcfZjNF44 由些帮助
