@@ -24,7 +24,7 @@ ii. [‘BCD’, ‘EFG’, ‘HIJ’]
 
 iii. [‘CDE’, ‘FGH’, ‘IJK’]
 
-所以，每个序列产生三个句子，用这些句子训练出词向量。某蛋白质Sequence的w2v特征取为其三个句子中所有词的词向量的和。（发现这题取和比取平均好）
+所以，每个序列产生三个句子，用所有序列产生的句子训练出词向量。某蛋白质Sequence的w2v特征取为其三个句子中所有词的词向量的和。（发现这题取和比取平均好）
 在代码中，word embedding size为128, 所以此时产生了128个特征：
 
 w2v_0, w2v_1, ...., w2v_127
@@ -41,3 +41,28 @@ df_aff = pd.concat([df_aff_train,df_aff_test])
 df_molecule_count = df_aff.groupby("Molecule_ID",as_index=False).Ki.agg({"molecule_count":"count"})
 </code></pre>
 concat时，df_aff中来自测试集的Ki是missing的，而count操作时不计missing values的，所以，实际上我算的是molecule_id在训练集的出现次数，而测试集的molecule_count全为0...
+
+##### 2.4 蛋白质的统计特征 (make_protein_stat.py)
+
+蛋白质Sequence中氨基酸个数（Sequence长度）, 20个氨基酸在Sequence中出现次数，出现频率
+一共41个特征：protein_stat_0, protein_stat_1, ...., protein_stat_40
+
+另外，还有个特征：protein_count: protein_id在训练集和测试集的出现次数，实现上和molecule_count发生了同样的错误（这个特征是在lgb.py里加的）
+
+##### 2.5 Stacking特征 (make_stacking_feat.py, make_more_stacking.py)
+
+关于Stacking: 训练集分为五折，各折训练集的该特征通过在其余四折数据上训练ridge得到，预测集的特征为5个ridge对预测集的预测平均值。
+
+ridge_cat特征: 将molecule_id one hot (不是直接One Hot, molecule_id出现次数等于一的，归为了一类)，训练ridge
+
+ridge_tfidf特征: 以protein_id的Sequence的tfidf作为特征，训练ridge
+
+ridge_cat_tfidf特征：以one hot的molecule_id和tfidf作为特征，训练ridge
+
+ridge_fp特征: 以fingerprint为特征，训练ridge
+
+ridge_w2v特征：以w2v为特征，训练ridge
+
+ridge_all: 以one hot的molecule_id和tfidf和df_molecule.csv中分子的物化属性（缺失值用均值填充）作为特征，训练ridge
+
+##### 2.6 df_molecule.csv给出的分子的物化属性特征
